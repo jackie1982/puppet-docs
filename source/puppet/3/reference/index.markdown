@@ -1,18 +1,18 @@
 ---
 layout: default
-title: "Puppet 3 Reference Manual"
+title: "Puppet 3 参考手册"
 ---
 
 
-Welcome to the Puppet 3 Reference Manual! Use the navigation to the left to get around. [Documentation for Puppet 2.7 can be found here.](/puppet/2.7/reference) 
+欢迎来到Puppet 3 参考手册。通过左侧的导航栏，你可以快速的找到自己想要的内容。 [Puppet 2.7的文档点这里。](/puppet/2.7/reference) 
 
-To install Puppet 3, see [the Puppet installation guide](/guides/installation.html). For general advice on upgrading between major versions, see [Upgrading Puppet](/guides/upgrading.html).
+需要安装Puppet 3的话，点这里[Puppet安装向导](/guides/installation.html)。主要版本间的升级建议，点这里[Upgrading Puppet](/guides/upgrading.html).
 
-This manual is split into several sections: 
+本手册分为以下几部分： 
 
-* ["Puppet 3 Overview"](./whats_new.html) contains information about Puppet 3's new and different features. 
-* ["Puppet 3 Release Notes"](./release_notes.html) track changes between patch and minor releases. 
-* ["The Puppet Language"](./lang_summary.html) documents Puppet's configuration language as implemented in Puppet 3.
-* ["Modules"](./modules_fundamentals.html) explains how to organize your Puppet manifests, obtain pre-existing modules, and publish your own modules for public use.
-* "Generated References" links to documentation extracted from the Puppet source code, including the [resource type reference](/references/3.1.latest/type.html), the [function reference](/references/3.1.latest/function.html) the [metaparameter reference](/references/3.1.latest/metaparameter.html),the [report handler reference](/references/3.1.latest/report.html) and the [developer reference](/references/3.1.latest/developer/index.html). 
+* ["Puppet 3 概述"](./whats_new.html)  包含Puppet 3的新增或有变化的特性信息。
+* ["Puppet 3 发布说明"](./release_notes.html)  每个补丁/次要发布版本的变动信息。
+* ["Puppet 语言"](./lang_summary.html) Puppet 配置语言的文档。
+* ["模块"](./modules_fundamentals.html) 说明如何管理你的Puppet Manifests，获取别人写好的模块，并公布自己写的模块给大家用。
+* “Generated References” 链接到的是从Puppet源码提取中的文档地址，包含[资源类型参考](/references/3.1.latest/type.html)，[函数参考](/references/3.1.latest/function.html), [元参数参考](/references/3.1.latest/metaparameter.html),[报告处理方式参考](/references/3.1.latest/report.html)和[开发人员参考](/references/3.1.latest/developer/index.html)。 
 
