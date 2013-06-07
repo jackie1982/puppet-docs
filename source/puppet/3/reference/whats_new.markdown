@@ -17,46 +17,46 @@ description: "New features, improvements, changes, and incompatibilities in the 
 [target_310]: http://projects.puppetlabs.com/projects/puppet/issues?set_filter=1&f%5B%5D=fixed_version_id&op%5Bfixed_version_id%5D=%3D&v%5Bfixed_version_id%5D%5B%5D=288&f%5B%5D=&c%5B%5D=project&c%5B%5D=tracker&c%5B%5D=status&c%5B%5D=priority&c%5B%5D=subject&c%5B%5D=assigned_to&c%5B%5D=fixed_version&group_by=
 [puppet3_release_notes]: ./release_notes.html
 
-Puppet 3 introduces several new features and some backwards-incompatible changes. **Before upgrading from Puppet 2.x, you should:**
+Puppet 3 引进了一些新的特性和向后不兼容的变更。**从Puppet 2.x版本升级前，你需要**：
 
-* Read our [general recommendations for upgrading between two major versions of Puppet][upgrade], which include suggested roll-out plans and package management practices.
-* Read the [Backwards-Incompatible Changes][backwards] section below and watch for "upgrade notes" --- you may need to make changes to your configuration and manifests.
-* Check the [Telly upgrade issues][upgrade_issues] wiki page, and make sure none of the bugs found immediately after the current release are dealbreakers for your site.
+* 阅读我们的[两个主要Puppet版本间升级的一般性建议][upgrade]，它包含推荐的转出计划和包管理实践。
+* 阅读下面的[向后不兼容变更][backwards]节并查看升级说明，你可能需要更改你的配置项或Manifests。
+* 查看[Telly升级问题][upgrade_issues]的wiki页面中当前版本升级过程中可能会出现的问题，并确认没有你不可接受的。
 
-This document provides a more narrative guide to the Puppet 3 release. For information on changes to subsequent point and patch releases (e.g. 3.1.0 and 3.1.1), please see the [Puppet 3 release notes page][puppet3_release_notes]
+本文档提供的是Puppet 3版本发布的变更说明，如需要后续版本的说明(如3.1.0和3.1.1)，请见[Puppet 3 发行说明][puppet3_release_notes]
 
 
-Flagship Features in Puppet 3.x
+Puppet 3.x中的旗舰特性
 -----
 
-### Improved Version Numbering
+### 改进的版本编号
 
-Puppet 3 marks the beginning of a new version scheme for Puppet releases. Beginning with 3.0.0, Puppet uses a strict three-field version number:
+Puppet 3标志着Puppet开始使用新的版本编号方案。从3.0.0开始，Puppet使用严格的3段式版本编号：
 
-* The leftmost segment of the version number must increase for major backwards-incompatible changes.
-* The middle segment may increase for backwards-compatible new functionality.
-* The rightmost segment may increase for bug fixes.
+* 最左侧的版本号必须在有重大的向后不兼容的变更发生时才增加。
+* 中间的版本号用于标志有向后不兼容的新功能。
+* 最右侧版本号的用于标志有补丁修复。
 
-### Major Speed Increase
+### 重大的性能改进
 
-Puppet 3 is faster than Puppet 2.6 and _significantly_ faster than Puppet 2.7. The exact change will depend on your site's configuration and Puppet code, but many 2.7 users have seen up to a 50% improvement.
+Puppet 3的编译和执行速度非常显著的快于2.6和2.7版本。准确增加的时间根据你的Puppet配置和代码不同而不同，但许多2.7版本的用户升级后，速度都有50%的提升。
 
-### Automatic Data Bindings for Class Parameters
+### 类参数的自动数据绑定
 
-When you declare or assign classes, Puppet now automatically looks up parameter values in Hiera. See [Classes][] for more details.
+当你声明或指定了一个类，现在Puppet会自动通过Hiera查找参数的值。详情见[Classes][].
 
-### Hiera Functions in Core
+### 集成Hiera功能
 
-The `hiera`, `hiera_array`, `hiera_hash`, and `hiera_include` functions are now included in Puppet core. If you previously installed these functions with the `hiera-puppet` package, you may need to uninstall it before upgrading.
+现在`hiera`, `hiera_array`, `hiera_hash`, 和 `hiera_include`函数集成进了Puppet核心。如果你以前已经安装了`hiera-puppet`包, 需要在升级前首先卸载。
 
-### Solaris Improvements
+### 为Solaris的改进
 
-* Puppet now supports the ipkg format, and is able to "hold" packages (install without activating) on Solaris.
-* Zones support is fixed.
-* Zpool support is significantly improved.
+* Puppet现在Solaris中支持ipkg格式，并且允许”hold”程序包（只安装不激活）。
+* 修复Zones支持。
+* 显著的改进Zpool支持。
 
 
-New Features in Puppet 3.1.0
+Puppet 3.1.0 中的新特性
 -----
 
 ### YAML Node Cache Restored on Master
