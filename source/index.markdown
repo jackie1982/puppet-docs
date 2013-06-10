@@ -4,7 +4,7 @@ title: Puppet Labs Documentation
 canonical: "/"
 ---
 
-Welcome to the Puppet Labs documentation site. The documentation posted here is also available as a set of PDFs, which can be found [here](http://info.puppetlabs.com/download-pdfs.html). You can also [download the current version of this entire website](./puppetdocs-latest.tar.gz) as a zipped archive; unzip it and follow the instructions in the README.txt file to view the site offline.
+欢迎来到Puppet Labs 文档站点。这里的文档也提供PDF版本，点[这里](http://info.puppetlabs.com/download-pdfs.html)下载。你也可以直接下载[当前版本的整个站点](./puppetdocs-latest.tar.gz)的ZIP版本，并根据README.txt的提示来离线查看站点。 
 
 [Puppet](/puppet)
 -----

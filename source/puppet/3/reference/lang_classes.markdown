@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Language: Classes"
+title: "Language: 类"
 ---
 
 <!-- TODO: Need better link for hiera -->
@@ -11,7 +11,7 @@ title: "Language: Classes"
 [namespace]: ./lang_namespaces.html
 [enc]: /guides/external_nodes.html
 [tags]: ./lang_tags.html
-[allowed]: ./lang_reserved.html#classes-and-types
+[allowed]: ./lang_reserved.html#类-and-types
 [function]: ./lang_functions.html
 [modules]: ./modules_fundamentals.html
 [contains]: ./lang_containment.html
@@ -34,7 +34,7 @@ title: "Language: Classes"
 [catalog]: ./lang_summary.html#compilation-and-catalogs
 [facts]: ./lang_variables.html#facts-and-built-in-variables
 [import]: ./lang_import.html
-[declare]: #declaring-classes
+[declare]: #declaring-类
 [setting_parameters]: #include-like-vs-resource-like
 [override]: #using-resource-like-declarations
 [ldap_nodes]: http://projects.puppetlabs.com/projects/1/wiki/Ldap_Nodes
@@ -46,19 +46,19 @@ title: "Language: Classes"
 
 
 
-**Classes** are named blocks of Puppet code, which are stored in [modules][] for later use and are not applied until they are invoked by name. They can be added to a node's [catalog][] by either **declaring** them in your manifests or by **assigning** them from an [ENC][].
+**类**是一段全名了的Puppet代码，它保存在[模块][modules]中以供稍后使用.并且除非通过名称调用，它是不会被应用到节点中的，你可以通过在manifests中**声明**或ENC中**分配**的方式将它们添加到节点的[catalog][]。
 
-Classes generally configure large or medium-sized chunks of functionality, such as all of the packages, config files, and services needed to run an application. 
+类通常用于配置大型或中等大小的功能，如一整个应用程序需要的程序包，配置文件和守护进程。 
 
-Defining Classes
+定义类
 -----
 
-Defining a class makes it available for later use. It doesn't yet add any resources to the catalog; to do that, you must [declare it (see below)][declare] or [assign it from an ENC][enc].
+定义一个类使它可以在以后使用。定义后，类默认是不会被添加到catalog中的，必须要[声明][declare]或通过[ENC指定][enc]才可以。
 
-### Syntax
+### 语法
 
 {% highlight ruby %}
-    # A class with no parameters
+    # 一个没有参数的类
     class base::linux {
       file { '/etc/passwd':
         owner => 'root',
@@ -74,7 +74,7 @@ Defining a class makes it available for later use. It doesn't yet add any resour
 {% endhighlight %}
 
 {% highlight ruby %}
-    # A class with parameters
+    # 一个带参数的类
     class apache ($version = 'latest') {
       package {'httpd':
         ensure => $version, # Using the class parameter from above
@@ -93,84 +93,84 @@ Defining a class makes it available for later use. It doesn't yet add any resour
     }
 {% endhighlight %}
 
-The general form of a class definition is:
+定义一个类的标准格式为：
 
-* The `class` keyword
-* The [name][allowed] of the class
-* An optional **set of parameters,** which consists of:
-    * An opening parenthesis
-    * A comma-separated list of **parameters,** each of which consists of:
-        * A new [variable][] name, including the `$` prefix
-        * An optional equals (=) sign and **default value** (any data type)
-    * An optional trailing comma after the last parameter
-    * A closing parenthesis
-* Optionally, the `inherits` keyword followed by a single class name
-* An opening curly brace
-* A block of arbitrary Puppet code, which generally contains at least one [resource declaration][resource_declaration]
-* A closing curly brace
-
-
-### Class Parameters and Variables
+* `class`关键字
+* [类名][allowed]
+* 一组可选的**参数**：
+    * 左小括号
+    * 逗号分隔的**参数**：
+        * 一个新的[变量][variable]名，包括`$`前缀
+        * 一个可选的等于号(=)和**默认值**(任意数据类型)
+    * 最后的参数后的逗号可选
+    * 右小括号
+* 可选的`inherits`关键字和紧跟的一个类名
+* 左花括号
+* 一段任意的Puppet代码，一般至少包含一个[资源定义][resource_declaration]
+* 右花括号
 
 
-**Parameters** allow a class to request external data. If a class needs to configure itself with data other than [facts][], that data should usually enter the class via a parameter.
+### 类的参数和变量
 
-Each class parameter can be used as a normal [variable][] inside the class definition. The values of these variables are not set with [normal assignment statements][variable_assignment] or read from top or node scope; instead, they are [automatically set when the class is declared][setting_parameters]. 
 
-Note that if a class parameter lacks a default value, the user of the module **must** set a value themselves (either in their [external data][external_data] or an [override][]). As such, you should supply defaults wherever possible.
+**参数**使类可以获取外部数据，如果一个类需要[facts][]以外的数据来配置它自己，那么这个数据通常需要通过参数获得。
 
-### Location
+在定义时，每个类的参数都可以在内部以正常[变量][variable]的形式使用。这些变量并不是通过[正常的赋值语句][variable_assignment]或从全局/节点域中读取赋值，而是[在类被声明时自动设置][setting_parameters]. 
 
-Class definitions should be stored in [modules][]. Puppet is **automatically aware** of classes in modules and can autoload them by name. 
+注意如果一个类的参数没有设置默认值，使用这个类(模块)时，**必须**指定它的值(either in their [external data][external_data] or an [override][]).因此，你应当尽可能的写上默认值。
 
-Classes should be stored in their module's `manifests/` directory as one class per file, and each filename should reflect the name of its class; see [Module Fundamentals][modules] and [Namespaces and Autoloading][namespace] for more details. 
+### 位置
 
-> #### Other Locations
+类的定义应该保存在模块中，Puppet对[模块][modules]中的类是自动感知并可以自动加载的。
+
+类应该保存在它自己模块的`manifests/`目录中的，每个类一个文件且文件名可以映射到类的名字。详情查看[模块基础][modules]和[命名空间和自动加载][namespace] 
+
+> #### 其它位置
 >
-> Most users should **only** load classes from modules. However, you can also put classes in the following additional locations:
+> 大多数的用户应该**只**从模块中加载类。但，你仍然可以在下列的位置定义类：
 > 
-> * [The site manifest][sitedotpp]. If you do so, they may be placed anywhere in the file and are not parse-order dependent. 
-> * [Imported manifests][import]. If you do so, you must [import][] the file containing the class before you may declare it.
-> * Other class definitions. This puts the interior class under the exterior class's [namespace][], causing its real name to be something other than the name with which it was defined. It does not cause the interior class to be automatically declared along with the exterior class. Nested classes cannot be autoloaded; in order for the interior class to be visible to Puppet, the manifest containing it must have been forcibly loaded, either by autoloading the outermost class, using an [import][] statement, or placing the entire nested structure in the site manifest. Although nesting classes is not yet formally deprecated, it is **very much** not recommended. 
+> * [The site manifest][sitedotpp]. 如果放在这里，它们可以放在这个文件的任何位置，并且不会有编译顺序依赖。
+> * [Imported manifests][import]. 如果放在这里，你必须在声明一个类前[import][]包含它的定义的文件。
+> * 其它类的定义 这会使内部类在外部类的[命名空间][namespace]下，导致它真实的名字与定义的不一致。这样的话，内部类并不会随着外部类的声明而自动声明。嵌套的类不能被自动加载，因为它对于Puppet来说是不可见的，要使用这个类，包含它的manifest必须强制加载( 自动加载最外层的类，使用[import][]语法导入文件或是将整个嵌套结构放到主站点manifest中)。尽管嵌套类还没有正式的被废弃掉，但**非常强烈**的不建议使用。
 
-### Containment
+### 容器
 
-A class [contains][] all of its resources. This means any [relationships][] formed with the class as a whole will be extended to every resource in the class.
+一个类[包含][contains]了它自己所有的资源，意思是说赋予给类的所有[顺序关系][relationships]都会添加到整个类的所有资源上。
 
-Note that classes cannot contain other classes. This is a known design issue; [see the relevant note on the "Containment" page][contains_float] for more details.
+注意类不能包含或者它，这是一个已知的设计问题。详情见[容器的相关事项][contains_float].
 
-### Auto-Tagging
+### 自动标签
 
-Every resource in a class gets automatically [tagged][tags] with the class's name (and each of its [namespace segments][namespace]).
+每个类中的资源都会自动获得类名的[标签][tags](和其[命名空间节][namespace]).
 
-### Inheritance
+### 继承
 
-Classes can be derived from other classes using the `inherits` keyword. This allows you to make special-case classes that extend the functionality of a more general "base" class. 
+类可以通过`inherits`关键字从其它类衍生，这可以使你从一个通用的基类中扩展功能形成特定功能的类。
 
-> Note: Puppet 3 does not support using parameterized classes for inheritable base classes. The base class **must** have no parameters.
+> 注: Puppet 3 不支持将有参数的类做为可继承的基类，基类**必须**是无参数的。
 
-Inheritance causes three things to happen: 
+继承会引发3件事： 
 
-* When a derived class is declared, its base class is automatically declared **first** (if it wasn't already declared elsewhere).
-* The base class becomes the [parent scope][parent_scope] of the derived class, so that the new class receives a copy of all of the base class's variables and resource defaults.
-* Code in the derived class is given special permission to override any resource attributes that were set in the base class. 
+* 当衍生类被声明时，它的基类也会**先**自动的声明（如果它没有已经在没的地方声明）。
+* 基类成为衍生类的[父域][parent_scope]，因此新类会收到一份来自于基类的所有变量和资源默认值的拷贝。
+* 衍生类中的代码获得覆盖基类中任意资源属性的特殊权限。
 
-> #### Aside: When to Inherit
+> #### Aside: 什么时候继承
 >
-> Class inheritance should be used **very sparingly,** generally only in the following situations:
+> 类的继承应当仅在下列几种情况下**非常甚重**的使用：
 > 
-> * When you need to override resource attributes in the base class.
-> * To let a "params class" provide default values for another class's parameters:
+> * 当你需要覆盖基类的资源属性时。
+> * 让一个“参数类”为其它类提供参数的默认值：
 > 
 >       class example ($my_param = $example::params::myparam) inherits example::params { ... }
 > 
->   This pattern works by guaranteeing that the params class is evaluated before Puppet attempts to evaluate the main class's parameter list. It is especially useful when you want your default values to change based on system facts and other data, since it lets you isolate and encapsulate all that conditional logic.
+>   这个工作模式用于保证Puppet在尝试运算主类的参数列表前，首先运算”参数类“中的代码。这在你想要参数的默认值根据Facts或其它数据的不同而变化时特别有用，能使你减少条件逻辑的使用。
 > 
-> **In nearly all other cases, inheritance is unnecessary complexity.** If you need some class's resources declared before proceeding further, you can [include](#declaring-a-class-with-include) it inside another class's definition. If you need to read internal data from another class, you should generally use [qualified variable names][qualified_var] instead of assigning parent scopes. If you need to use an "anti-class" pattern (e.g. to disable a service that is normally enabled), you can use a class parameter to override the standard behavior.
+> **除了上面的情况，继承增加的复杂度就没那么必要了**，如果你需要某些类的资源如果首先声明，把放[include][]进其它类的定义中就好；需要从其它类读取外部数据，可以使用[变量全名][qualified_var]替代从父域赋值；想使用”反类“模式（如停止一个正常情况下运行的服务），可以使用类的参数来覆盖标准的动作。 
 > 
-> Note also that you can [use resource collectors to override resource attributes][collector_override] in unrelated classes, although this feature should be handled with care.
+> 记住你仍然可以在不相关的类中[使用resource collectors来覆盖资源属性][collector_override]，nutp这个特性需要小心使用。
 
-#### Overriding Resource Attributes
+#### 覆盖资源属性
 
 The attributes of any resource in the base class can be overridden with a [reference][resource_reference] to the resource you wish to override, followed by a set of curly braces containing attribute => value pairs:
 
@@ -199,7 +199,7 @@ You can remove an attribute's previous value without setting a new one by overri
 
 This causes the attribute to be unmanaged by Puppet. 
 
-> **Note:** If a base class declares other classes with the resource-like syntax, a class derived from it cannot override the class parameters of those inner classes. This is a known bug. 
+> **Note:** If a base class declares other 类 with the resource-like syntax, a class derived from it cannot override the class parameters of those inner 类. This is a known bug. 
 
 #### Appending to Resource Attributes
 
@@ -224,16 +224,16 @@ Some resource attributes (such as the [relationship metaparameters][relationship
 
 
 
-Declaring Classes
+Declaring 类
 -----
 
-**Declaring** a class in a Puppet manifest adds all of its resources to the catalog. You can declare classes in [node definitions][node], at top scope in the [site manifest][sitedotpp], and in other classes or [defined types][definedtype]. Declaring classes isn't the only way to add them to the catalog; you can also [assign classes to nodes with an ENC](#assigning-classes-from-an-enc).
+**Declaring** a class in a Puppet manifest adds all of its resources to the catalog. You can declare 类 in [node definitions][node], at top scope in the [site manifest][sitedotpp], and in other 类 or [defined types][definedtype]. Declaring 类 isn't the only way to add them to the catalog; you can also [assign 类 to nodes with an ENC](#assigning-类-from-an-enc).
 
-Classes are singletons --- although a given class may have very different behavior depending on how its parameters are set, the resources in it will only be evaluated **once per compilation.** 
+类 are singletons --- although a given class may have very different behavior depending on how its parameters are set, the resources in it will only be evaluated **once per compilation.** 
 
 ### Include-Like vs. Resource-Like
 
-Puppet has two main ways to declare classes: include-like and resource-like. 
+Puppet has two main ways to declare 类: include-like and resource-like. 
 
 > **Note:** These two behaviors **should not be mixed** for a given class. Puppet's behavior when declaring or assigning a class with both styles is undefined, and will sometimes work and sometimes cause compilation failures. 
 
@@ -241,9 +241,9 @@ Puppet has two main ways to declare classes: include-like and resource-like.
 
 [include-like]: #include-like-behavior
 
-The `include`, `require`, and `hiera_include` functions let you safely declare a class **multiple times;** no matter how many times you declare it, a class will only be added to the catalog once. This can allow classes or defined types to manage their own dependencies, and lets you create overlapping "role" classes where a given node may have more than one role.
+The `include`, `require`, and `hiera_include` functions let you safely declare a class **multiple times;** no matter how many times you declare it, a class will only be added to the catalog once. This can allow 类 or defined types to manage their own dependencies, and lets you create overlapping "role" 类 where a given node may have more than one role.
 
-Include-like behavior relies on [external data][external_data] and defaults for class parameter values, which allows the external data source to act like cascading configuration files for all of your classes. When a class is declared, Puppet will try the following for each of its parameters:
+Include-like behavior relies on [external data][external_data] and defaults for class parameter values, which allows the external data source to act like cascading configuration files for all of your 类. When a class is declared, Puppet will try the following for each of its parameters:
 
 1. Request a value from [the external data source][external_data], using the key `<class name>::<parameter name>`. (For example, to get the `apache` class's `version` parameter, Puppet would search for `apache::version`.)
 2. Use the default value. 
@@ -275,7 +275,7 @@ Resource-like class declarations require that you **only declare a given class o
 
 ### Using `include`
 
-The `include` [function][] is the standard way to declare classes.
+The `include` [function][] is the standard way to declare 类.
 
 {% highlight ruby %}
     include base::linux
@@ -283,19 +283,19 @@ The `include` [function][] is the standard way to declare classes.
 
     include base::linux, apache # including a list
 
-    $my_classes = ['base::linux', 'apache']
-    include $my_classes # including an array
+    $my_类 = ['base::linux', 'apache']
+    include $my_类 # including an array
 {% endhighlight %}
 
 The `include` function uses [include-like behavior][include-like]. (Multiple declarations OK; relies on external data for parameters.) It can accept:
 
 * A single class
-* A comma-separated list of classes
-* An array of classes
+* A comma-separated list of 类
+* An array of 类
 
 ### Using `require`
 
-The `require` function (not to be confused with the [`require` metaparameter][relationships]) declares one or more classes, then causes them to become a [dependency][relationships] of the surrounding container.
+The `require` function (not to be confused with the [`require` metaparameter][relationships]) declares one or more 类, then causes them to become a [dependency][relationships] of the surrounding container.
 
 {% highlight ruby %}
     define apache::vhost ($port, $docroot, $servername, $vhost_name) {
@@ -309,12 +309,12 @@ In the above example, Puppet will ensure that every resource in the `apache` cla
 The `require` function uses [include-like behavior][include-like]. (Multiple declarations OK; relies on external data for parameters.) It can accept:
 
 * A single class
-* A comma-separated list of classes
-* An array of classes
+* A comma-separated list of 类
+* An array of 类
 
 ### Using `hiera_include`
 
-The `hiera_include` function requests a list of class names from [Hiera][], then declares all of them. Since it uses the [array resolution type][array_search], it will get a combined list that includes classes from **every level** of the [hierarchy][hiera_hierarchy]. This allows you to abandon [node definitions][node] and use Hiera like a lightweight ENC. 
+The `hiera_include` function requests a list of class names from [Hiera][], then declares all of them. Since it uses the [array resolution type][array_search], it will get a combined list that includes 类 from **every level** of the [hierarchy][hiera_hierarchy]. This allows you to abandon [node definitions][node] and use Hiera like a lightweight ENC. 
 
     # /etc/puppetlabs/puppet/hiera.yaml
     ...
@@ -324,22 +324,22 @@ The `hiera_include` function requests a list of class names from [Hiera][], then
 
     # /etc/puppetlabs/puppet/hieradata/web01.example.com.yaml
     ---
-    classes:
+    类:
       - apache
       - memcached
       - wordpress
 
     # /etc/puppetlabs/puppet/hieradata/common.yaml
     ---
-    classes:
+    类:
       - base::linux
 
 {% highlight ruby %}
     # /etc/puppetlabs/puppet/manifests/site.pp
-    hiera_include(classes)
+    hiera_include(类)
 {% endhighlight %}
 
-On the node `web01.example.com`, the example above would declare the classes `apache`, `memcached`, `wordpress`, and `base::linux`. On other nodes, it would only declare `base::linux`.
+On the node `web01.example.com`, the example above would declare the 类 `apache`, `memcached`, `wordpress`, and `base::linux`. On other nodes, it would only declare `base::linux`.
 
 The `hiera_include` function uses [include-like behavior][include-like]. (Multiple declarations OK; relies on external data for parameters.) It accepts a single lookup key.
 
@@ -374,10 +374,10 @@ However, note that:
 
 
 
-Assigning Classes From an ENC
+Assigning 类 From an ENC
 -----
 
-Classes can also be assigned to nodes by [external node classifiers][enc] and [LDAP node data][ldap_nodes]. Note that most ENCs assign classes with include-like behavior, and some ENCs assign them with resource-like behaior. See the [documentation of the ENC interface][enc] or the documentation of your specific ENC for complete details.
+类 can also be assigned to nodes by [external node classifiers][enc] and [LDAP node data][ldap_nodes]. Note that most ENCs assign 类 with include-like behavior, and some ENCs assign them with resource-like behaior. See the [documentation of the ENC interface][enc] or the documentation of your specific ENC for complete details.
 
 
 
@@ -426,4 +426,4 @@ Classes can also be assigned to nodes by [external node classifiers][enc] and [L
 > 
 > ### Avoid Class Parameters
 > 
-> Prior to Puppet 2.6, classes could only request data by reading arbitrary variables outside their local [scope][]. It is still possible to design classes like this. **However,** since dynamic scope was removed in Puppet 3, old-style classes can only read **top-scope or node-scope** variables, which makes them less flexible than they were in previous versions. Your best options for using old-style classes with Puppet 3 are to use an ENC to set your classes' variables, or to manually insert `$special_variable = hiera('class::special_variable')` calls at top scope in your site manifest.
+> Prior to Puppet 2.6, 类 could only request data by reading arbitrary variables outside their local [scope][]. It is still possible to design 类 like this. **However,** since dynamic scope was removed in Puppet 3, old-style 类 can only read **top-scope or node-scope** variables, which makes them less flexible than they were in previous versions. Your best options for using old-style 类 with Puppet 3 are to use an ENC to set your 类' variables, or to manually insert `$special_variable = hiera('class::special_variable')` calls at top scope in your site manifest.

@@ -49,7 +49,7 @@ title: "Language: Visual Index"
 [coll_override]: ./lang_resources.html#amending-attributes-with-a-collector
 [virtual]: ./lang_virtual.html
 
-This page can help you find syntax elements when you can't remember their names.
+此页可以在你不记得语法元素的名字的时候帮助你找到它们。
 
 
 {% highlight ruby %}
@@ -62,13 +62,13 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ A [resource declaration][resource].
+↑ 一个[资源声明][resource].
 
-* `file`: The [resource type][type]
-* `ntp.conf`: The [title][]
-* `path`: An [attribute][]
-* `'/etc/ntp.conf'`: A [value][]; in this case, a [string][]
-* `template('ntp/ntp.conf')`: A [function][] call that [returns a value][rvalue]; in this case, the [`template`][template_func] function, with the name of a template in a [module][] as its [argument][]
+* `file`: [资源类型][type]
+* `ntp.conf`: [标题][title]
+* `path`: [属性][attribute]
+* `'/etc/ntp.conf'`: [值][value]; 在这里，它是一个[字符串][string]
+* `template('ntp/ntp.conf')`: [函数][function]调用，[返回一个值][rvalue]; 在这里使用的是[template][template_func]函数, [参数][argument]为ntp[模块][module]中g一个模板的名字。
 
 {% highlight ruby %}
     package {'ntp':
@@ -81,32 +81,32 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ Two resources using the `before` and `subscribe` [relationship metaparameters][relationship_meta] (which accept [resource references][refs]).
+↑ 两个使用了`before`和`subscribe`[关系元参数][relationship_meta]的资源 (它们接受[资源引用][refs]).
 
 {% highlight ruby %}
     Package['ntp'] -> File['ntp.conf'] ~> Service['ntpd']
 {% endhighlight %}
 
-↑ [Chaining arrows][chaining] forming relationships between three resources, using [resource references][refs].
+↑ 通过[顺序链箭头][chaining]指定3个资源间的顺序关系, 使用[资源引用][refs]的形式。
 
 {% highlight ruby %}
     $package_list = ['ntp', 'apache2', 'vim-nox', 'wget']
 {% endhighlight %}
 
-↑ A [variable][] being assigned an [array][] value.
+↑ 将一个[数组][array]赋值给一个[变量][variable]。
 
 {% highlight ruby %}
     $myhash = { key => { subkey => 'b' }}
 {% endhighlight %}
 
-↑ A [variable][] being assigned a [hash][] value.
+↑ 将一个[哈希][hash]赋值给一个[变量][variable]。
 
 {% highlight ruby %}
     ...
     content => "Managed by puppet master version ${serverversion}"
 {% endhighlight %}
 
-↑ A master-provided [built-in variable][built_in] being [interpolated into a double-quoted string][interpolation] (with optional curly braces).
+↑ 将一个Master提供的[内置变量][built-in variable] [内插进双引号括起来的字符串中][interpolation] (带可选的花括号).
 
 
 {% highlight ruby %}
@@ -118,7 +118,7 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ A [class definition][class_def], which makes a class avaliable for later use.
+↑ [定义类][class_def]，定义完成后类可以在以后使用。
 
 {% highlight ruby %}
     include ntp
@@ -126,7 +126,7 @@ This page can help you find syntax elements when you can't remember their names.
     class {'ntp':}
 {% endhighlight %}
 
-↑ [Declaring a class][class_decl] in three different ways: with the `include` function, with the `require` function, and with the resource-like syntax. Declaring a class causes the resources in it to be managed. 
+↑ 以3种不同的方式[声明类][class_decl]: 通过include函数，require函数和resource-like语法. 声明类后，其中的资源将会增加进当前节点使用Puppet管理。
 
 
 {% highlight ruby %}
@@ -145,7 +145,7 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ A [defined type][defined_type], which makes a new resource type available. Note that the name of the type has two [namespace segments][namespace].
+↑ [自定义类型][defined type], 创建一个新的资源类型。注意这个类型的名字有两个[命名空间节][namespace]。
 
 {% highlight ruby %}
     apache::vhost {'homepages':
@@ -154,13 +154,13 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ Declaring a [defined resource][defined_resource] (or "instance") of the type defined above. 
+↑ 声明一个上面已经定义了的[自定义类型的资源][defined_resource] (或实例化)。
 
 {% highlight ruby %}
     Apache::Vhost['homepages']
 {% endhighlight %}
 
-↑ A [resource reference][refs] to the defined resource declared above. Note that every [namespace segment][namespace] must be capitalized.
+↑ 上面已经声明的自定义类型资源的[资源实例引用][refs]，注意每个[命令空间节][namespace]都必须是首字母大写。
 
 {% highlight ruby %}
     node 'www1.example.com' {
@@ -170,7 +170,7 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ A [node definition][node].
+↑ 一个[节点定义][node].
 
 {% highlight ruby %}
     node /^www\d+$/ {
@@ -178,20 +178,20 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ A [regular expression node definition][regex_node].
+↑ 一个[正则表达式形式的节点定义][regex_node]。
 
 {% highlight ruby %}
     import nodes/*.pp
 {% endhighlight %}
 
-↑ An [import statement][import]. Should be avoided in all but a few circumstances.
+↑ 一个[import语句][import]，建议仅在少数的几种情况下使用。
 
 {% highlight ruby %}
     # comment
     /* comment */
 {% endhighlight %}
 
-↑ Two [comments][].
+↑ 两条[注释][comments]。
 
 
 {% highlight ruby %}
@@ -205,7 +205,7 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ An [if statement][if], whose conditions are [expressions][] that use agent-provided [facts][].
+↑ 一条[if语句][if], 条件是一个使用了agent提供的[facts][]的[表达式][expressions]。
 
 
 {% highlight ruby %}
@@ -214,7 +214,7 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ An [if statement][if] using a [regular expression][regex] and the [regex match operator][regex_match]. 
+↑ 一条使用了[正则表达式][regex]和[匹配操作符][regex_match]的[if语句][if]。
 
 {% highlight ruby %}
     if 'www' in $hostname {
@@ -222,7 +222,7 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ An [if statement][if] using an [`in` expression][in]
+↑ 一条使用了[`in`表达式][in]的[if语句][if]。
 
 {% highlight ruby %}
     case $operatingsystem {
@@ -233,7 +233,7 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ A [case statement][case].
+↑ 一条[case语句][case].
 
 {% highlight ruby %}
     $rootgroup = $osfamily ? {
@@ -243,19 +243,19 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ A [selector statement][selector] being used to set the value of the `$rootgroup` [variable][].
+↑ 一条用于定义`$rootgroup`[变量][variable]值的[selector语句][selector]。
 
 {% highlight ruby %}
     User <| groups == 'admin' |>
 {% endhighlight %}
 
-↑ A [resource collector][collector], sometimes called the "spaceship operator."
+↑ 一个[resource collector][collector]，又叫”飞船操作符”。
 
 {% highlight ruby %}
     Concat::Fragment <<| tag == "bacula-storage-dir-${bacula_director}" |>>
 {% endhighlight %}
 
-↑ An [exported resource collector][export_collector], which works with [exported resources][export]
+↑ 一个[exported resource collector][export_collector]，与[exported resources][export]一同使用。
 
 {% highlight ruby %}
     Exec { 
@@ -266,7 +266,7 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ A [resource default][defaults] for resources of the `exec` type.
+↑ 一个`exec`资源类型的[资源默认值][defaults]。
 
 {% highlight ruby %}
     Exec['update_migrations'] {
@@ -274,7 +274,7 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ A [resource override][override], which will only work in an [inherited class][inherits].
+↑ 一个[resource override][override]，只可在[子类][inherits]中使用。
 
 {% highlight ruby %}
     Exec <| title == 'update_migrations' |> {
@@ -282,7 +282,7 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ A [resource override using a collector][coll_override], which will work anywhere. Dangerous, but very useful in rare cases.
+↑ 一个[resource override using a collector][coll_override]，可以使用在任何位置。危险，但在某些时候非常有用。
 
 
 {% highlight ruby %}
@@ -295,7 +295,7 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ A [virtual resource][virtual].
+↑ 一个[虚拟资源][virtual].
 
 
 {% highlight ruby %}
@@ -309,5 +309,5 @@ This page can help you find syntax elements when you can't remember their names.
     }
 {% endhighlight %}
 
-↑ An [exported resource][export] declaration.
+↑ 一个[exported resource][export]声明。
 
