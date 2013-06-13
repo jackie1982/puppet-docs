@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Language: 类"
+title: "语法: 类"
 ---
 
 <!-- TODO: Need better link for hiera -->
@@ -34,7 +34,7 @@ title: "Language: 类"
 [catalog]: ./lang_summary.html#compilation-and-catalogs
 [facts]: ./lang_variables.html#facts-and-built-in-variables
 [import]: ./lang_import.html
-[declare]: #declaring-类
+[declare]: #declaring-class
 [setting_parameters]: #include-like-vs-resource-like
 [override]: #using-resource-like-declarations
 [ldap_nodes]: http://projects.puppetlabs.com/projects/1/wiki/Ldap_Nodes
@@ -46,7 +46,7 @@ title: "Language: 类"
 
 
 
-**类**是一段全名了的Puppet代码，它保存在[模块][modules]中以供稍后使用.并且除非通过名称调用，它是不会被应用到节点中的，你可以通过在manifests中**声明**或ENC中**分配**的方式将它们添加到节点的[catalog][]。
+**类**是一段命名了的Puppet代码，它保存在[模块][modules]中以供稍后使用.并且除非通过名称调用，它是不会被应用到节点中的，你可以通过在manifests中**声明**或ENC中**分配**的方式将它们添加到节点的[catalog][]。
 
 类通常用于配置大型或中等大小的功能，如一整个应用程序需要的程序包，配置文件和守护进程。 
 
@@ -113,7 +113,7 @@ title: "Language: 类"
 ### 类的参数和变量
 
 
-**参数**使类可以获取外部数据，如果一个类需要[facts][]以外的数据来配置它自己，那么这个数据通常需要通过参数获得。
+**参数**使类可以获取外部数据(hiera)，如果一个类需要[facts][]以外的数据来配置它自己，那么这个数据通常需要通过参数获得。
 
 在定义时，每个类的参数都可以在内部以正常[变量][variable]的形式使用。这些变量并不是通过[正常的赋值语句][variable_assignment]或从全局/节点域中读取赋值，而是[在类被声明时自动设置][setting_parameters]. 
 
@@ -145,15 +145,15 @@ title: "Language: 类"
 
 ### 继承
 
-类可以通过`inherits`关键字从其它类衍生，这可以使你从一个通用的基类中扩展功能形成特定功能的类。
+类可以通过`inherits`关键字从其它类派生，这可以使你从一个通用的基类中扩展功能形成特定功能的类。
 
 > 注: Puppet 3 不支持将有参数的类做为可继承的基类，基类**必须**是无参数的。
 
 继承会引发3件事： 
 
-* 当衍生类被声明时，它的基类也会**先**自动的声明（如果它没有已经在没的地方声明）。
-* 基类成为衍生类的[父域][parent_scope]，因此新类会收到一份来自于基类的所有变量和资源默认值的拷贝。
-* 衍生类中的代码获得覆盖基类中任意资源属性的特殊权限。
+* 当派生类被声明时，它的基类也会**先**自动的声明（如果它没有已经在没的地方声明）。
+* 基类成为派生类的[父域][parent_scope]，因此新类会收到一份来自于基类的所有变量和资源默认值的拷贝。
+* 派生类中的代码获得覆盖基类中任意资源属性的特殊权限。
 
 > #### Aside: 什么时候继承
 >
@@ -166,13 +166,13 @@ title: "Language: 类"
 > 
 >   这个工作模式用于保证Puppet在尝试运算主类的参数列表前，首先运算”参数类“中的代码。这在你想要参数的默认值根据Facts或其它数据的不同而变化时特别有用，能使你减少条件逻辑的使用。
 > 
-> **除了上面的情况，继承增加的复杂度就没那么必要了**，如果你需要某些类的资源如果首先声明，把放[include][]进其它类的定义中就好；需要从其它类读取外部数据，可以使用[变量全名][qualified_var]替代从父域赋值；想使用”反类“模式（如停止一个正常情况下运行的服务），可以使用类的参数来覆盖标准的动作。 
+> **除了上面的情况，继承增加的复杂度就没那么必要了**，如果你需要某些类的资源如果首先声明，把放[include][]进其它类的定义中就好；需要从其它类读取外部数据(hiera)，可以使用[变量全名][qualified_var]替代从父域赋值；想使用”反类“模式（如停止一个正常情况下运行的服务），可以使用类的参数来覆盖标准的动作。 
 > 
 > 记住你仍然可以在不相关的类中[使用resource collectors来覆盖资源属性][collector_override]，nutp这个特性需要小心使用。
 
 #### 覆盖资源属性
 
-The attributes of any resource in the base class can be overridden with a [reference][resource_reference] to the resource you wish to override, followed by a set of curly braces containing attribute => value pairs:
+基类中任意资源的属性都可以通过资源[引用][resource_reference]的方式覆盖，使用的方式是引用后面加括号括起来的的”属性=>值"对：
 
 {% highlight ruby %}
     class base::freebsd inherits base::unix {
@@ -185,9 +185,9 @@ The attributes of any resource in the base class can be overridden with a [refer
     }
 {% endhighlight %}
 
-This is identical to the syntax for [adding attributes to an existing resource][add_attribute], but in a derived class, it gains the ability to rewrite resources instead of just adding to them. Note that you can also use [multi-resource references][multi_ref] here.
+它和[给现有资源添加属性][add_attribute]的语法是完全相同，但只能用在派生类里。它提供了重写资源属性的能力而不只是添加，注意在这里我们也可以使用[多资源引用]的形式。
 
-You can remove an attribute's previous value without setting a new one by overriding it with the special value [`undef`][undef]:
+如果你想删除前面设置的属性的值，可以将它的值覆盖成特殊的[`undef`][undef]:
 
 {% highlight ruby %}
     class base::freebsd inherits base::unix {
@@ -197,13 +197,13 @@ You can remove an attribute's previous value without setting a new one by overri
     }
 {% endhighlight %}
 
-This causes the attribute to be unmanaged by Puppet. 
+上面的代码会使Puppet不再管理这个group属性。 
 
-> **Note:** If a base class declares other 类 with the resource-like syntax, a class derived from it cannot override the class parameters of those inner 类. This is a known bug. 
+> **注意：** 如果基类中使用资源式的方式声明了其它的类，那么它的派生类不能覆盖那些内部类的参数。这是一个已知的Bug。
 
-#### Appending to Resource Attributes
+#### 添加资源属性的值
 
-Some resource attributes (such as the [relationship metaparameters][relationships]) can accept multiple values in an array. When overriding attributes in a derived class, you can add to the existing values instead of replacing them by using the `+>` ("plusignment") keyword instead of the standard `=>` hash rocket:
+一些资源的属性（比如[关系元参数][relationships])可以通过数组的形式接受多个值。当在派生类中覆盖属性时，你可以通过将标准的`=>`关键字换成`+>`的方式，来在原有属性值的基础上附加新的值而不是替代它们。
 
 {% highlight ruby %}
     class apache {
@@ -224,58 +224,58 @@ Some resource attributes (such as the [relationship metaparameters][relationship
 
 
 
-Declaring 类
+声明类
 -----
 
-**Declaring** a class in a Puppet manifest adds all of its resources to the catalog. You can declare 类 in [node definitions][node], at top scope in the [site manifest][sitedotpp], and in other 类 or [defined types][definedtype]. Declaring 类 isn't the only way to add them to the catalog; you can also [assign 类 to nodes with an ENC](#assigning-类-from-an-enc).
+在Puppet manifests中**声明**一个类会将它里面所有的资源添加到catalog中，你可以在[节点定义][node]中声明类，或是在[站点级manifests][sitedotpp]的全局域中，在其它的类或[自定义类型][definedtype]中，声明类并不是唯一的添加它们到catalog的方式，你也可以使用[通过ENC分配类到节点](#assigning-class-from-an-enc).
 
-类 are singletons --- although a given class may have very different behavior depending on how its parameters are set, the resources in it will only be evaluated **once per compilation.** 
+类是单例的，尽管一个给定的类会因为参数的不同而有很大差别的行为，每次编译，类中的资源都只会被**运算一次**。 
 
-### Include-Like vs. Resource-Like
+### Include式与Resource式
 
-Puppet has two main ways to declare 类: include-like and resource-like. 
+Puppet有两种主要的方式来声明类: include式和resource式。 
 
-> **Note:** These two behaviors **should not be mixed** for a given class. Puppet's behavior when declaring or assigning a class with both styles is undefined, and will sometimes work and sometimes cause compilation failures. 
+> **注意：** 对于一个给定的类而言，这两种声明方式**不可以混用**。Puppet并未定义同时使用这两种方式来声明或分配类的行为，如果你真这么做了，有可能能正常工作，有可能会编译失败。
 
-#### Include-Like Behavior
+#### Include式的行为
 
-[include-like]: #include-like-behavior
+[include式]: #include-like-behavior
 
-The `include`, `require`, and `hiera_include` functions let you safely declare a class **multiple times;** no matter how many times you declare it, a class will only be added to the catalog once. This can allow 类 or defined types to manage their own dependencies, and lets you create overlapping "role" 类 where a given node may have more than one role.
+`include`, `require`, 和`hiera_include`函数让你可以安全的**多次**声明同一个类，但它只会被添加到catalog中一次。这可以允许类或自定义类型管理它们自己的依赖关系，并允许你在某个节点拥有多个角色时，重复添加“角色”类。
 
-Include-like behavior relies on [external data][external_data] and defaults for class parameter values, which allows the external data source to act like cascading configuration files for all of your 类. When a class is declared, Puppet will try the following for each of its parameters:
+Include-like behavior relies on [external data][external_data] and defaults for class parameter values, which allows the external data source to act like cascading configuration files for all of your class. 当类被声明时，Puppet将尝试通过下列的步骤给类的参数赋值：
 
-1. Request a value from [the external data source][external_data], using the key `<class name>::<parameter name>`. (For example, to get the `apache` class's `version` parameter, Puppet would search for `apache::version`.)
-2. Use the default value. 
-3. Fail compilation with an error if no value can be found.
+1. 从[外部数据(hiera)源][external_data]获取值，使用`<class name>::<parameter name>`的形式。(例如，获取`apache`类的`version`参数，Puppet会查找`apache::version`。)
+2. 使用默认值。
+3. 如果没找到任何一个值，编译将会失败。
 
-> **Aside: Best Practices**
+> **Aside: 最佳实践**
 >
-> **Most** users in **most** situations should use include-like declarations and set parameter values in their external data. However, compatibility with earlier versions of Puppet may require compromises. See [Aside: Writing for Multiple Puppet Versions][aside_history] below for details.
+> **大多数**用户在**大多数**情况下都应该使用include式的声明，并且在外部数据(hiera)中设置参数的值。无论如何，要兼容以前的老版本就需要付出妥协。详情[Aside: 为多个Puppet版本编写代码][aside_history]。
 
-> **Version Note:** Automatic external parameter lookup is a new feature in Puppet 3. Puppet 2.7 and earlier could only use default values or override values from resource-like declarations. [See below for more details.][aside_history]
+> **版本注意事项:** 自动外部参数查找是Puppet 3中的新特性，2.7和之前的版本只能用默认值或是resource式声明的方式来覆盖参数值。[详情见下面的内容][aside_history]。
 
-#### Resource-like Behavior
+#### Resource式的行为
 
-[resource-like]: #resource-like-behavior
+[resource式]: #resource-like-behavior
 
-Resource-like class declarations require that you **only declare a given class once.** They allow you to override class parameters at compile time, and will fall back to [external data][external_data] for any parameters you don't override.  When a class is declared, Puppet will try the following for each of its parameters:
+Resource式类的声明需要你**给定的类只声明一次**。这允许你在编译的时候覆盖参数默认值，而没有指定覆盖的参数将会回退到查找[外部数据(hiera)][external_data]的步骤。当类被声明时，Puppet会尝试下列的方式为类的参数赋值：
 
-1. Use the override value from the declaration, if present.
-2. Request a value from [the external data source][external_data], using the key `<class name>::<parameter name>`. (For example, to get the `apache` class's `version` parameter, Puppet would search for `apache::version`.)
-3. Use the default value. 
-4. Fail compilation with an error if no value can be found.
+1. 如果指定了值，参数的默认值会被覆盖。 
+2. 从[外部数据(hiera)源][external_data]获取值，使用`<class name>::<parameter name>`的形式。(例如，获取`apache`类的`version`参数，Puppet会查找`apache::version`。)
+3. 使用默认值。
+4. 如果没找到任何一个值，编译将会失败。
 
-> **Aside: Why Do Resource-Like Declarations Have to Be Unique?**
+> **Aside: 为什么Resource式的声明必须是唯一的?**
 >
-> This is necessary to avoid paradoxical or conflicting parameter values. Since overridden values from the class declaration always win, are computed at compile-time, and do not have a built-in hierarchy for resolving conflicts, allowing repeated overrides would cause catalog compilation to be unreliable and parse-order dependent.
+> 这是为了避免参数值发生诡异或冲突的情况，通过声明类的方式覆盖参数值总是排在首位的，在编译时计算，并且不会与内置的hierarchy的解析发生冲突，允许重复覆盖会导致catalog编译过程变的不那么可靠。
 > 
-> This was the original reason for adding external data bindings to include-like declarations: since external data is set **before** compile-time and has a **fixed hierarchy,** the compiler can safely rely on it without risk of conflicts. 
+> 这就是设计外部数据(hiera)(绑定数据到include式声明的类）的原因，这样外部数据会在编译之前设置，并且有固定的分层结构，编译器就可以安全的依赖于这个体系，避免掉参数值冲突的风险。
 
 
-### Using `include`
+### 使用`include`
 
-The `include` [function][] is the standard way to declare 类.
+`include`[函数][function]最标准的声明类的方式。
 
 {% highlight ruby %}
     include base::linux
@@ -284,18 +284,18 @@ The `include` [function][] is the standard way to declare 类.
     include base::linux, apache # including a list
 
     $my_类 = ['base::linux', 'apache']
-    include $my_类 # including an array
+    include $my_class # including an array
 {% endhighlight %}
 
-The `include` function uses [include-like behavior][include-like]. (Multiple declarations OK; relies on external data for parameters.) It can accept:
+`include`函数的行为是[include式][include-like]式的（可以多次声明，参数依赖于外部数据（hiera)）。它可以接受：
 
-* A single class
-* A comma-separated list of 类
-* An array of 类
+* 一个单独的类
+* 一个逗号分隔的类的列表
+* 一个类的数组
 
-### Using `require`
+### 使用`require`
 
-The `require` function (not to be confused with the [`require` metaparameter][relationships]) declares one or more 类, then causes them to become a [dependency][relationships] of the surrounding container.
+`require`函数（不要与[`require`元参数][relationships]搞混)声明一个或多个类，然后使之变成当前容器的[依赖项][relationships]。
 
 {% highlight ruby %}
     define apache::vhost ($port, $docroot, $servername, $vhost_name) {
@@ -304,17 +304,17 @@ The `require` function (not to be confused with the [`require` metaparameter][re
     }
 {% endhighlight %}
 
-In the above example, Puppet will ensure that every resource in the `apache` class gets applied before every resource in **any** `apache::vhost` instance. 
+在上面的例子中，Puppet会确保`apache`类的每一个资源都在**任意一个**`apache::vhost`实例的所有资源前执行。 
 
-The `require` function uses [include-like behavior][include-like]. (Multiple declarations OK; relies on external data for parameters.) It can accept:
+`require`函数的行为是[include式][include-like]式的（可以多次声明，参数依赖于外部数据（hiera)）。它可以接受：
 
-* A single class
-* A comma-separated list of 类
-* An array of 类
+* 一个单独的类
+* 一个逗号分隔的类的列表
+* 一个类的数组
 
-### Using `hiera_include`
+### 使用`hiera_include`
 
-The `hiera_include` function requests a list of class names from [Hiera][], then declares all of them. Since it uses the [array resolution type][array_search], it will get a combined list that includes 类 from **every level** of the [hierarchy][hiera_hierarchy]. This allows you to abandon [node definitions][node] and use Hiera like a lightweight ENC. 
+`hiera_include`函数从[Hiera][]获取类名的列表，然后声明所有的，使用了[array resolution type][array_search]之后，它将获得从分层结构的各层include了的类的一份组合列表。它可以让你放弃[节点定义][node]转而使用像是轻量级别ENC的Hiera。
 
     # /etc/puppetlabs/puppet/hiera.yaml
     ...
@@ -324,28 +324,28 @@ The `hiera_include` function requests a list of class names from [Hiera][], then
 
     # /etc/puppetlabs/puppet/hieradata/web01.example.com.yaml
     ---
-    类:
+    class:
       - apache
       - memcached
       - wordpress
 
     # /etc/puppetlabs/puppet/hieradata/common.yaml
     ---
-    类:
+    class:
       - base::linux
 
 {% highlight ruby %}
     # /etc/puppetlabs/puppet/manifests/site.pp
-    hiera_include(类)
+    hiera_include(class)
 {% endhighlight %}
 
-On the node `web01.example.com`, the example above would declare the 类 `apache`, `memcached`, `wordpress`, and `base::linux`. On other nodes, it would only declare `base::linux`.
+在上面的例子中，`web01.example.com`将会声明`apache`, `memcached`, `wordpress`, 和`base::linux`类。其它节点将只会声明`base::linux`类。
 
-The `hiera_include` function uses [include-like behavior][include-like]. (Multiple declarations OK; relies on external data for parameters.) It accepts a single lookup key.
+`hiera_include`函数 函数的行为是[include式][include-like]式的（可以多次声明，参数依赖于外部数据（hiera)）。它接受单个lookup key。
 
-### Using Resource-Like Declarations
+### 使用Resource式声明
 
-Resource-like declarations look like [normal resource declarations][resource_declaration], using the special `class` pseudo-resource type. 
+Resource式声明看起来像[正常的资源声明][resource_declaration]，使用特殊的`class`伪资源类型。 
 
 {% highlight ruby %}
     # Overriding a parameter:
@@ -356,9 +356,9 @@ Resource-like declarations look like [normal resource declarations][resource_dec
     class {'base::linux':}
 {% endhighlight %}
 
-Resource-like declarations use [resource-like behavior][resource-like]. (Multiple declarations prohibited; parameters may be overridden at compile-time.) You can provide a value for any class parameter by specifying it as resource attribute; any parameters not specified will follow the normal external/default/fail lookup path.
+Resource式声明的行为是[resource式][resource-like]的(不允许多次声明，参数可以在编译时覆盖。)。你可以以资源属性的形式指定任意一个参数的值，未指定的参数将会走"外部/默认/失败"(external/default/fail)的路。
 
-In addition to class-specific parameters, you can also specify a value for any [metaparameter][metaparameters]. In such cases, every resource contained in the class will also have that metaparameter:
+另外，关于类的参数，你也可以指定任意一个[元参数][metaparameters]。这种情况下，每个类里的资源都会拥有这个元参数:
 
 {% highlight ruby %}
     # Cause the entire class to be noop:
@@ -367,17 +367,17 @@ In addition to class-specific parameters, you can also specify a value for any [
     }
 {% endhighlight %}
 
-However, note that:
+不管如何，记住:
 
 * Any resource can specifically override metaparameter values received from its container.
 * Metaparameters which can take more than one value (like the [relationship][relationships] metaparameters) will merge the values from the container and any resource-specific values.
 
 
 
-Assigning 类 From an ENC
+通过ENC分配类
 -----
 
-类 can also be assigned to nodes by [external node classifiers][enc] and [LDAP node data][ldap_nodes]. Note that most ENCs assign 类 with include-like behavior, and some ENCs assign them with resource-like behaior. See the [documentation of the ENC interface][enc] or the documentation of your specific ENC for complete details.
+类也可以通过[ENC][enc]和[LDAP节点][ldap_nodes]分配到节点。Note that most ENCs assign 类 with include-like behavior, and some ENCs assign them with resource-like behaior. See the [documentation of the ENC interface][enc] or the documentation of your specific ENC for complete details.
 
 
 

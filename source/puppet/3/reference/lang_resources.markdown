@@ -23,7 +23,7 @@ title: "Language: Resources"
 [collector]: ./lang_collectors.html
 [catalog]: ./lang_summary.html#compilation-and-catalogs
 
-> * [See the Type Reference for complete information about Puppet's built-in resource types.][types]
+> * Puppet内建资源类型的完整信息，见[类型参考][types]。
 
 **Resources** are the fundamental unit for modeling system configurations. Each resource describes some aspect of a system, like a service that must be running or a package that must be installed. The block of Puppet code that describes a resource is called a **resource declaration.**
 
